@@ -7,15 +7,15 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { Album } from './album.interface';
-import { AlbumsService } from './album.service';
+import { UsersService } from './user.service';
+import { UpdatePasswordDto, User } from './user.interface';
 
-@Controller('albums')
-export class AlbumsController {
-  constructor(private service: AlbumsService) {}
+@Controller('users')
+export class UsersController {
+  constructor(private service: UsersService) {}
 
   @Post()
-  create(@Body() createDto: Album) {
+  create(@Body() createDto: User) {
     this.service.create(createDto);
   }
 
@@ -30,7 +30,7 @@ export class AlbumsController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateDto: Album) {
+  update(@Param('id') id: string, @Body() updateDto: UpdatePasswordDto) {
     this.service.update(id, updateDto);
   }
 
