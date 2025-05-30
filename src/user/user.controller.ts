@@ -6,36 +6,68 @@ import {
   Put,
   Param,
   Delete,
+  ParseUUIDPipe,
+  HttpCode,
+  HttpException,
+  HttpStatus,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
-import { UsersService } from './user.service';
-import { UpdatePasswordDto, User } from './user.interface';
+import { UserService } from './user.service';
+import { CreateUserDto, UpdatePasswordDto } from './user.dto';
+import { ERRORS } from 'src/consts/ERRORS';
+import { ValidateUserPipe } from './validate-user.pipe';
 
-@Controller('users')
-export class UsersController {
-  constructor(private service: UsersService) {}
-
-  @Post()
-  create(@Body() createDto: User) {
-    this.service.create(createDto);
-  }
+@Controller('user')
+export class UserController {
+  constructor(private service: UserService) {}
 
   @Get()
-  findAll() {
-    return this.service.getAll();
+  async findAll() {
+    const users = await this.service.getAll();
+    const response = users.map((user) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...newUser } = user;
+      return newUser;
+    });
+    return response;
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.service.get(id);
+  async findOne(@Param('id', ParseUUIDPipe) id: string) {
+    const user = await this.service.get(id);
+    if (!user) {
+      throw new HttpException(ERRORS.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...newUser } = user;
+    return newUser;
+  }
+
+  @Post()
+  async create(@Body() createDto: CreateUserDto) {
+    const user = await this.service.create(createDto);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...newUser } = user;
+    return newUser;
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateDto: UpdatePasswordDto) {
-    this.service.update(id, updateDto);
+  @UsePipes(ValidateUserPipe, ValidationPipe)
+  async update(@Body() updateDto: UpdatePasswordDto) {
+    const updatedUser = await this.service.update(updateDto);
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...newUser } = updatedUser;
+    return newUser;
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    this.service.delete(id);
+  @HttpCode(204)
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
+    const deletedUser = await this.service.delete(id);
+    if (!deletedUser) {
+      throw new HttpException(ERRORS.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
   }
 }

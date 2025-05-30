@@ -243,37 +243,27 @@ describe('Users (e2e)', () => {
         .post(usersRoutes.create)
         .set(commonHeaders)
         .send(createUserDto);
-
       const { id } = response.body;
-
       expect(response.status).toBe(StatusCodes.CREATED);
-
       const cleanupResponse = await unauthorizedRequest
         .delete(usersRoutes.delete(id))
         .set(commonHeaders);
-
       expect(cleanupResponse.statusCode).toBe(StatusCodes.NO_CONTENT);
-
       const searchResponse = await unauthorizedRequest
         .get(usersRoutes.getById(id))
         .set(commonHeaders);
-
       expect(searchResponse.statusCode).toBe(StatusCodes.NOT_FOUND);
     });
-
     it('should respond with BAD_REQUEST status code in case of invalid id', async () => {
       const response = await unauthorizedRequest
         .delete(usersRoutes.delete('some-invalid-id'))
         .set(commonHeaders);
-
       expect(response.status).toBe(StatusCodes.BAD_REQUEST);
     });
-
     it("should respond with NOT_FOUND status code in case if user doesn't exist", async () => {
       const response = await unauthorizedRequest
         .delete(usersRoutes.delete(randomUUID))
         .set(commonHeaders);
-
       expect(response.status).toBe(StatusCodes.NOT_FOUND);
     });
   });

@@ -6,22 +6,28 @@ import {
   Put,
   Param,
   Delete,
+  Res,
+  HttpStatus,
 } from '@nestjs/common';
 import { Album } from './album.interface';
 import { AlbumsService } from './album.service';
+import { Response } from 'express';
 
-@Controller('albums')
+@Controller('album')
 export class AlbumsController {
   constructor(private service: AlbumsService) {}
 
   @Post()
-  create(@Body() createDto: Album) {
+  create(@Body() createDto: Album, @Res() res: Response) {
     this.service.create(createDto);
+    res.status(HttpStatus.CREATED).send();
   }
 
   @Get()
-  findAll() {
-    return this.service.getAll();
+  findAll(@Res({ passthrough: true }) res: Response) {
+    const data = this.service.getAll();
+    res.status(HttpStatus.OK).json(data).send();
+    return data;
   }
 
   @Get(':id')

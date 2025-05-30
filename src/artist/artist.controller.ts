@@ -10,7 +10,7 @@ import {
 import { ArtistsService } from './artist.service';
 import { createArtistDto, updateArtistDto } from './artist.interface';
 
-@Controller('artists')
+@Controller('artist')
 export class ArtistsController {
   constructor(private service: ArtistsService) {}
 

@@ -10,7 +10,7 @@ import {
 import { TrackService } from './track.service';
 import { createTrackDto, updateTrackDto } from './track.interface';
 
-@Controller('tracks')
+@Controller('track')
 export class TrackController {
   constructor(private service: TrackService) {}
 

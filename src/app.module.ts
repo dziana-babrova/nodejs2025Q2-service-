@@ -5,9 +5,10 @@ import { ArtistsService } from './artist/artist.service';
 import { ArtistsController } from './artist/artist.controller';
 import { TrackController } from './track/track.controller';
 import { TrackService } from './track/track.service';
+import { UserModule } from './user/user.module';
 
 @Module({
-  imports: [],
+  imports: [UserModule],
   controllers: [AlbumsController, ArtistsController, TrackController],
   providers: [AlbumsService, ArtistsService, TrackService],
 })
