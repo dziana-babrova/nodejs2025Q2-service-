@@ -6,42 +6,44 @@ import {
   Put,
   Param,
   Delete,
-  Res,
-  HttpStatus,
+  HttpCode,
 } from '@nestjs/common';
-import { Album } from './album.interface';
-import { AlbumsService } from './album.service';
-import { Response } from 'express';
+import { AlbumService } from './album.service';
+import { createAlbumDto, updateAlbumDto } from './album.dto';
+import { ValidateAlbumPipe } from './validate-album.pipe';
 
 @Controller('album')
-export class AlbumsController {
-  constructor(private service: AlbumsService) {}
-
-  @Post()
-  create(@Body() createDto: Album, @Res() res: Response) {
-    this.service.create(createDto);
-    res.status(HttpStatus.CREATED).send();
-  }
+export class AlbumController {
+  constructor(private service: AlbumService) {}
 
   @Get()
-  findAll(@Res({ passthrough: true }) res: Response) {
-    const data = this.service.getAll();
-    res.status(HttpStatus.OK).json(data).send();
-    return data;
+  async findAll() {
+    return this.service.getAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id', ValidateAlbumPipe) id: string) {
     return this.service.get(id);
   }
 
+  @Post()
+  @HttpCode(201)
+  async create(@Body() createDto: createAlbumDto) {
+    console.log(createDto);
+    return this.service.create(createDto);
+  }
+
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateDto: Album) {
-    this.service.update(id, updateDto);
+  async update(
+    @Param('id', ValidateAlbumPipe) id: string,
+    @Body() updateDto: updateAlbumDto,
+  ) {
+    return this.service.update(id, updateDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    this.service.delete(id);
+  @HttpCode(204)
+  async remove(@Param('id', ValidateAlbumPipe) id: string) {
+    await this.service.delete(id);
   }
 }

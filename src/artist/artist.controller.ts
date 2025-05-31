@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { createArtistDto, updateArtistDto } from './artist.dto';
-import { ValidateArtistExistsPipe } from './validate-artist.pipe';
+import { ValidateArtistPipe } from './validate-artist.pipe';
 
 @Controller('artist')
 export class ArtistController {
@@ -22,7 +22,7 @@ export class ArtistController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', ValidateArtistExistsPipe) id: string) {
+  async findOne(@Param('id', ValidateArtistPipe) id: string) {
     return this.service.get(id);
   }
 
@@ -34,16 +34,15 @@ export class ArtistController {
 
   @Put(':id')
   async update(
-    @Param('id', ValidateArtistExistsPipe) id: string,
+    @Param('id', ValidateArtistPipe) id: string,
     @Body() updateDto: updateArtistDto,
   ) {
-    console.log(id, updateDto);
     return this.service.update(id, updateDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  async remove(@Param('id', ValidateArtistExistsPipe) id: string) {
+  async remove(@Param('id', ValidateArtistPipe) id: string) {
     await this.service.delete(id);
   }
 }

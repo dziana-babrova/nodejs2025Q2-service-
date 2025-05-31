@@ -4,23 +4,23 @@ import {
   NotFoundException,
   PipeTransform,
 } from '@nestjs/common';
-import { ArtistService } from './artist.service';
 import { ERRORS } from 'src/consts/ERRORS';
 import { isUUID } from 'class-validator';
+import { AlbumService } from './album.service';
 
 @Injectable()
-export class ValidateArtistPipe implements PipeTransform {
-  constructor(private readonly service: ArtistService) {}
+export class ValidateAlbumPipe implements PipeTransform {
+  constructor(private readonly service: AlbumService) {}
 
   async transform(id: string): Promise<string> {
-    const existingUser = await this.service.get(id);
+    const existingAlbum = await this.service.get(id);
 
     if (!isUUID(id)) {
       throw new BadRequestException(ERRORS.NOT_UUID());
     }
 
-    if (!existingUser) {
-      throw new NotFoundException(ERRORS.NOT_FOUND('Artist'));
+    if (!existingAlbum) {
+      throw new NotFoundException(ERRORS.NOT_FOUND('Album'));
     }
 
     return id;

@@ -34,9 +34,7 @@ export class ArtistService {
     return this.get(id);
   }
 
-  delete(id: string) {
-    const doesArtistExist: Promise<Artist | null> = this.get(id);
+  async delete(id: string) {
     this.data.delete(id);
-    return doesArtistExist;
   }
 }

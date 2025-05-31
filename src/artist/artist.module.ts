@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { ArtistController } from './artist.controller';
-import { ValidateArtistExistsPipe } from './validate-artist.pipe';
+import { ValidateArtistPipe } from './validate-artist.pipe';
 
 @Module({
   imports: [],
-  providers: [ArtistService, ValidateArtistExistsPipe],
+  providers: [ArtistService, ValidateArtistPipe],
   controllers: [ArtistController],
   exports: [ArtistService],
 })
