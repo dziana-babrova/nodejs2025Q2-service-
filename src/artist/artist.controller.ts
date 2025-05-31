@@ -6,36 +6,44 @@ import {
   Put,
   Param,
   Delete,
+  HttpCode,
 } from '@nestjs/common';
-import { ArtistsService } from './artist.service';
-import { createArtistDto, updateArtistDto } from './artist.interface';
+import { ArtistService } from './artist.service';
+import { createArtistDto, updateArtistDto } from './artist.dto';
+import { ValidateArtistExistsPipe } from './validate-artist.pipe';
 
 @Controller('artist')
-export class ArtistsController {
-  constructor(private service: ArtistsService) {}
-
-  @Post()
-  create(@Body() createDto: createArtistDto) {
-    this.service.create(createDto);
-  }
+export class ArtistController {
+  constructor(private service: ArtistService) {}
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.service.getAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id', ValidateArtistExistsPipe) id: string) {
     return this.service.get(id);
   }
 
+  @Post()
+  @HttpCode(201)
+  async create(@Body() createDto: createArtistDto) {
+    return this.service.create(createDto);
+  }
+
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateDto: updateArtistDto) {
-    this.service.update(id, updateDto);
+  async update(
+    @Param('id', ValidateArtistExistsPipe) id: string,
+    @Body() updateDto: updateArtistDto,
+  ) {
+    console.log(id, updateDto);
+    return this.service.update(id, updateDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    this.service.delete(id);
+  @HttpCode(204)
+  async remove(@Param('id', ValidateArtistExistsPipe) id: string) {
+    await this.service.delete(id);
   }
 }

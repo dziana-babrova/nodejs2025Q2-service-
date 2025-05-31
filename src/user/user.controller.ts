@@ -37,7 +37,7 @@ export class UserController {
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
     const user = await this.service.get(id);
     if (!user) {
-      throw new HttpException(ERRORS.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
+      throw new HttpException(ERRORS.NOT_FOUND('User'), HttpStatus.NOT_FOUND);
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...newUser } = user;
@@ -67,7 +67,7 @@ export class UserController {
   async remove(@Param('id', ParseUUIDPipe) id: string) {
     const deletedUser = await this.service.delete(id);
     if (!deletedUser) {
-      throw new HttpException(ERRORS.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
+      throw new HttpException(ERRORS.NOT_FOUND('User'), HttpStatus.NOT_FOUND);
     }
   }
 }

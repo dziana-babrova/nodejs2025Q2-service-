@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { ValidateUserPipe } from './validate-user.pipe';
@@ -12,6 +17,8 @@ import { CombineIdBodyMiddleware } from 'src/middleware/merge-param-body.middlew
 })
 export class UserModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(CombineIdBodyMiddleware).forRoutes('user/:id');
+    consumer
+      .apply(CombineIdBodyMiddleware)
+      .forRoutes({ path: 'user/:id', method: RequestMethod.PUT });
   }
 }

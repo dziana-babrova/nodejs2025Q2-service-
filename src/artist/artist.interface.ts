@@ -3,6 +3,3 @@ export interface Artist {
   name: string;
   grammy: boolean;
 }
-
-export interface createArtistDto extends Omit<Artist, 'id'> {}
-export interface updateArtistDto extends createArtistDto {}

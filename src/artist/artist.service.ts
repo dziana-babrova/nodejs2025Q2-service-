@@ -1,37 +1,42 @@
 import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
-import { Artist, createArtistDto, updateArtistDto } from './artist.interface';
+import { Artist } from './artist.interface';
+import { createArtistDto, updateArtistDto } from './artist.dto';
 
 @Injectable()
-export class ArtistsService {
+export class ArtistService {
   private readonly data: Map<string, Artist> = new Map();
 
-  create(dto: createArtistDto) {
+  async create(dto: createArtistDto) {
     const id = uuidv4();
-    const item = {
+    const item: Artist = {
       id,
       ...dto,
     };
     this.data.set(item.id, item);
+    return this.get(id);
   }
 
-  getAll(): Artist[] {
+  async getAll(): Promise<Artist[]> {
     return [...this.data.values()];
   }
 
-  get(id: string): Artist {
+  async get(id: string): Promise<Artist | null> {
     return this.data.get(id);
   }
 
-  update(id: string, updateDto: updateArtistDto) {
+  async update(id: string, updateDto: updateArtistDto): Promise<Artist | null> {
     const updatedItem = {
       id,
       ...updateDto,
     };
-    return this.data.set(id, updatedItem);
+    this.data.set(id, updatedItem);
+    return this.get(id);
   }
 
   delete(id: string) {
+    const doesArtistExist: Promise<Artist | null> = this.get(id);
     this.data.delete(id);
+    return doesArtistExist;
   }
 }

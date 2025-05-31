@@ -15,8 +15,7 @@ export class UserService {
       createdAt: time,
       updatedAt: time,
       version: 1,
-      login: createDto.login,
-      password: createDto.password,
+      ...createDto,
     };
     this.data.set(item.id, item);
     return this.data.get(id);
@@ -31,7 +30,6 @@ export class UserService {
   }
 
   async update({ id, ...dto }: UpdatePasswordDto) {
-    console.log(dto);
     const oldItem = this.data.get(id);
     const newTime = new Date().getTime();
     const newVersion = ++oldItem.version;

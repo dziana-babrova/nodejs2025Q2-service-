@@ -17,13 +17,13 @@ export class ValidateUserPipe implements PipeTransform {
   async transform(data: UpdatePasswordDto & { id: string }) {
     const user = await this.usersService.get(data.id);
     if (!user) {
-      throw new NotFoundException(ERRORS.USER_NOT_FOUND);
+      throw new NotFoundException(ERRORS.NOT_FOUND('User'));
     }
     if (data.oldPassword !== user.password) {
-      throw new ForbiddenException(ERRORS.INCORRECT_PASSWORD);
+      throw new ForbiddenException(ERRORS.INCORRECT_PASSWORD());
     }
     if (!isUUID(data.id)) {
-      throw new BadRequestException(ERRORS.NOT_UUID);
+      throw new BadRequestException(ERRORS.NOT_UUID());
     }
     return { ...data };
   }
