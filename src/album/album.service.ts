@@ -1,11 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { Album } from './album.interface';
 import { v4 as uuidv4 } from 'uuid';
 import { createAlbumDto, updateAlbumDto } from './album.dto';
+import { TrackService } from 'src/track/track.service';
 
 @Injectable()
 export class AlbumService {
   private readonly data: Map<string, Album> = new Map();
+
+  constructor(
+    @Inject(forwardRef(() => TrackService))
+    private readonly trackService: TrackService,
+  ) {}
 
   async create(dto: createAlbumDto) {
     const id = uuidv4();
@@ -36,5 +42,14 @@ export class AlbumService {
 
   async delete(id: string) {
     this.data.delete(id);
+    this.trackService.updateAlbumToNull(id);
+  }
+
+  async updateArtistToNull(artistId: string) {
+    [...this.data.values()]
+      .filter((track) => track.artistId === artistId)
+      .forEach((track) => {
+        this.data.set(track.id, { ...track, artistId: null });
+      });
   }
 }

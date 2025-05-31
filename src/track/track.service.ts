@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { Track } from './track.interface';
 import { createTrackDto, updateTrackDto } from './track.dto';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class TrackService {
@@ -36,5 +36,21 @@ export class TrackService {
 
   async delete(id: string) {
     this.data.delete(id);
+  }
+
+  async updateArtistToNull(artistId: string) {
+    [...this.data.values()]
+      .filter((track) => track.artistId === artistId)
+      .forEach((track) => {
+        this.data.set(track.id, { ...track, artistId: null });
+      });
+  }
+
+  async updateAlbumToNull(albumId: string) {
+    [...this.data.values()]
+      .filter((album) => album.albumId === albumId)
+      .forEach((album) => {
+        this.data.set(album.id, { ...album, albumId: null });
+      });
   }
 }
