@@ -29,7 +29,6 @@ export class AlbumController {
   @Post()
   @HttpCode(201)
   async create(@Body() createDto: createAlbumDto) {
-    console.log(createDto);
     return this.service.create(createDto);
   }
 

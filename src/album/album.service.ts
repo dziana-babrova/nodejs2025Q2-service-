@@ -13,7 +13,6 @@ export class AlbumService {
       id,
       ...dto,
     };
-    console.log(id, dto);
     this.data.set(item.id, item);
     return this.get(id);
   }

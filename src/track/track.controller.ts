@@ -6,36 +6,43 @@ import {
   Put,
   Param,
   Delete,
+  HttpCode,
 } from '@nestjs/common';
 import { TrackService } from './track.service';
-import { createTrackDto, updateTrackDto } from './track.interface';
+import { createTrackDto, updateTrackDto } from './track.dto';
+import { ValidateTrackPipe } from './validate-track.pipe';
 
 @Controller('track')
 export class TrackController {
   constructor(private service: TrackService) {}
 
   @Post()
-  create(@Body() createDto: createTrackDto) {
-    this.service.create(createDto);
+  @HttpCode(201)
+  async create(@Body() createDto: createTrackDto) {
+    return this.service.create(createDto);
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.service.getAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id', ValidateTrackPipe) id: string) {
     return this.service.get(id);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateDto: updateTrackDto) {
-    this.service.update(id, updateDto);
+  async update(
+    @Param('id', ValidateTrackPipe) id: string,
+    @Body() updateDto: updateTrackDto,
+  ) {
+    return this.service.update(id, updateDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  @HttpCode(204)
+  async remove(@Param('id', ValidateTrackPipe) id: string) {
     this.service.delete(id);
   }
 }
