@@ -4,6 +4,7 @@ import { AlbumModule } from './entities/album/album.module';
 import { TrackModule } from './entities/track/track.module';
 import { UserModule } from './entities/user/user.module';
 import { FavoritesModule } from './entities/favorites/favorites.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -12,6 +13,9 @@ import { FavoritesModule } from './entities/favorites/favorites.module';
     TrackModule,
     UserModule,
     FavoritesModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
   ],
 })
 export class AppModule {}
