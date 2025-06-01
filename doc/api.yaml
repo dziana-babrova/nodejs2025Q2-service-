@@ -5,7 +5,7 @@ info:
   version: 1.0.0
 
 servers:
-  - url: /api
+  - url: /
 
 components:
   schemas:
@@ -28,7 +28,7 @@ components:
           type: number
           example: 1655000000
       required:
-        - id
+        - password
         - login
     Artist:
       type: object
@@ -43,7 +43,7 @@ components:
           type: boolean
           example: false
       required:
-        - id
+        - grammy
         - name
     Album:
       type: object
@@ -62,7 +62,7 @@ components:
           format: uuid
           nullable: true
       required:
-        - id
+        - year
         - name
     Track:
       type: object
@@ -86,7 +86,6 @@ components:
           description: In seconds
           example: 262
       required:
-        - id
         - name
         - duration
     Favorites:
@@ -189,7 +188,7 @@ paths:
           description: Bad request
         409:
           description: Conflict. Login already exists
-  /users:
+  /user:
     get:
       tags:
         - Users
@@ -239,7 +238,7 @@ paths:
           description: Bad request. body does not contain required fields
         401:
           $ref: '#/components/responses/UnauthorizedError'
-  /users/{userId}:
+  /user/{userId}:
     parameters:
       - name: userId
         in: path
@@ -334,7 +333,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         404:
           description: User not found
-  /tracks:
+  /track:
     get:
       tags:
         - Track
@@ -388,7 +387,7 @@ paths:
           description: Bad request. body does not contain required fields
         401:
           $ref: '#/components/responses/UnauthorizedError'
-  /tracks/{id}:
+  /track/{id}:
     parameters:
       - name: id
         in: path
@@ -492,7 +491,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         404:
           description: Track was not found.
-  /albums:
+  /album:
     get:
       tags:
         - Album
@@ -544,7 +543,7 @@ paths:
           description: Bad request. body does not contain required fields
         401:
           $ref: '#/components/responses/UnauthorizedError'
-  /albums/{id}:
+  /album/{id}:
     parameters:
       - name: id
         in: path
@@ -621,7 +620,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         404:
           description: Album was not found.
-  /artists:
+  /artist:
     get:
       tags:
         - Artist
@@ -668,7 +667,7 @@ paths:
           description: Bad request. body does not contain required fields
         401:
           $ref: '#/components/responses/UnauthorizedError'
-  /artists/{id}:
+  /artist/{id}:
     parameters:
       - name: id
         in: path
