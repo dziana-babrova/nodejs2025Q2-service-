@@ -4,6 +4,7 @@ import { Artist } from './artist.interface';
 import { createArtistDto, updateArtistDto } from './artist.dto';
 import { TrackService } from 'src/track/track.service';
 import { AlbumService } from 'src/album/album.service';
+import { FavoritesService } from 'src/favorites/favorites.service';
 
 @Injectable()
 export class ArtistService {
@@ -14,6 +15,8 @@ export class ArtistService {
     private readonly trackService: TrackService,
     @Inject(forwardRef(() => AlbumService))
     private readonly albumService: AlbumService,
+    @Inject(forwardRef(() => FavoritesService))
+    private readonly favoritesService: FavoritesService,
   ) {}
 
   async create(dto: createArtistDto) {
@@ -47,5 +50,6 @@ export class ArtistService {
     this.data.delete(id);
     this.trackService.updateArtistToNull(id);
     this.albumService.updateArtistToNull(id);
+    this.favoritesService.deleteArtist(id);
   }
 }

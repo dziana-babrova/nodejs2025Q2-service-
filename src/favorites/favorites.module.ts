@@ -5,6 +5,9 @@ import { ArtistModule } from 'src/artist/artist.module';
 import { FavoritesService } from './favorites.service';
 import { FavoritesController } from './favorites.controller';
 import {
+  ValidateDeletionFavoriteAlbumPipe,
+  ValidateDeletionFavoriteArtistPipe,
+  ValidateDeletionFavoriteTrackPipe,
   ValidateFavoriteAlbumPipe,
   ValidateFavoriteArtistPipe,
   ValidateFavoriteTrackPipe,
@@ -21,7 +24,11 @@ import {
     ValidateFavoriteTrackPipe,
     ValidateFavoriteAlbumPipe,
     ValidateFavoriteArtistPipe,
+    ValidateDeletionFavoriteAlbumPipe,
+    ValidateDeletionFavoriteArtistPipe,
+    ValidateDeletionFavoriteTrackPipe,
   ],
   controllers: [FavoritesController],
+  exports: [FavoritesService],
 })
 export class FavoritesModule {}

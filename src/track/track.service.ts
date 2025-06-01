@@ -1,11 +1,17 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Track } from './track.interface';
 import { createTrackDto, updateTrackDto } from './track.dto';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { FavoritesService } from 'src/favorites/favorites.service';
 
 @Injectable()
 export class TrackService {
   private readonly data: Map<string, Track> = new Map();
+
+  constructor(
+    @Inject(forwardRef(() => FavoritesService))
+    private readonly favoritesService: FavoritesService,
+  ) {}
 
   async create(dto: createTrackDto) {
     const id = uuidv4();
@@ -36,6 +42,7 @@ export class TrackService {
 
   async delete(id: string) {
     this.data.delete(id);
+    this.favoritesService.deleteTrack(id);
   }
 
   async updateArtistToNull(artistId: string) {

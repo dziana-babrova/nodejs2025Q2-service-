@@ -3,6 +3,7 @@ import { Album } from './album.interface';
 import { v4 as uuidv4 } from 'uuid';
 import { createAlbumDto, updateAlbumDto } from './album.dto';
 import { TrackService } from 'src/track/track.service';
+import { FavoritesService } from 'src/favorites/favorites.service';
 
 @Injectable()
 export class AlbumService {
@@ -11,6 +12,8 @@ export class AlbumService {
   constructor(
     @Inject(forwardRef(() => TrackService))
     private readonly trackService: TrackService,
+    @Inject(forwardRef(() => FavoritesService))
+    private readonly favoritesService: FavoritesService,
   ) {}
 
   async create(dto: createAlbumDto) {
@@ -43,6 +46,7 @@ export class AlbumService {
   async delete(id: string) {
     this.data.delete(id);
     this.trackService.updateAlbumToNull(id);
+    this.favoritesService.deleteAlbum(id);
   }
 
   async updateArtistToNull(artistId: string) {

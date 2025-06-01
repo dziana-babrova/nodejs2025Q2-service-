@@ -5,6 +5,9 @@ import { Track } from 'src/track/track.interface';
 import { Album } from 'src/album/album.interface';
 import { Artist } from 'src/artist/artist.interface';
 import {
+  ValidateDeletionFavoriteAlbumPipe,
+  ValidateDeletionFavoriteArtistPipe,
+  ValidateDeletionFavoriteTrackPipe,
   ValidateFavoriteAlbumPipe,
   ValidateFavoriteArtistPipe,
   ValidateFavoriteTrackPipe,
@@ -28,8 +31,8 @@ export class FavoritesController {
 
   @Delete('track/:id')
   @HttpCode(204)
-  async removeTrack(@Param(ValidateFavoriteTrackPipe) track: Track) {
-    await this.service.deleteTrack(track.id);
+  async removeTrack(@Param(ValidateDeletionFavoriteTrackPipe) id: string) {
+    await this.service.deleteTrack(id);
     return MESSAGES.delete_track;
   }
 
@@ -42,8 +45,8 @@ export class FavoritesController {
 
   @Delete('album/:id')
   @HttpCode(204)
-  async removeAlbum(@Param(ValidateFavoriteAlbumPipe) album: Album) {
-    await this.service.deleteAlbum(album.id);
+  async removeAlbum(@Param(ValidateDeletionFavoriteAlbumPipe) id: string) {
+    await this.service.deleteAlbum(id);
     return MESSAGES.delete_album;
   }
 
@@ -56,8 +59,8 @@ export class FavoritesController {
 
   @Delete('artist/:id')
   @HttpCode(204)
-  async removeArtist(@Param(ValidateFavoriteArtistPipe) artist: Artist) {
-    await this.service.deleteArtist(artist.id);
+  async removeArtist(@Param(ValidateDeletionFavoriteArtistPipe) id: string) {
+    await this.service.deleteArtist(id);
     return MESSAGES.delete_artist;
   }
 }

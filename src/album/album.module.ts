@@ -3,9 +3,10 @@ import { AlbumController } from './album.controller';
 import { AlbumService } from './album.service';
 import { ValidateAlbumPipe } from './validate-album.pipe';
 import { TrackModule } from 'src/track/track.module';
+import { FavoritesModule } from 'src/favorites/favorites.module';
 
 @Module({
-  imports: [forwardRef(() => TrackModule)],
+  imports: [forwardRef(() => TrackModule), forwardRef(() => FavoritesModule)],
   providers: [AlbumService, ValidateAlbumPipe],
   controllers: [AlbumController],
   exports: [AlbumService],

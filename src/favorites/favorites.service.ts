@@ -29,21 +29,26 @@ export class FavoritesService {
   }
 
   async deleteAlbum(id: string) {
-    const index = this.data.albums.findIndex((album) => album.id === id);
-    if (index !== -1) {
-      this.data.albums.splice(index, 1);
-    }
+    this.data.albums = this.data.albums.filter((album) => album.id !== id);
   }
+
   async deleteTrack(id: string) {
-    const index = this.data.tracks.findIndex((track) => track.id === id);
-    if (index !== -1) {
-      this.data.tracks.splice(index, 1);
-    }
+    this.data.tracks = this.data.tracks.filter((track) => track.id !== id);
   }
+
   async deleteArtist(id: string) {
-    const index = this.data.artists.findIndex((artist) => artist.id === id);
-    if (index !== -1) {
-      this.data.artists.splice(index, 1);
-    }
+    this.data.artists = this.data.artists.filter((artist) => artist.id !== id);
+  }
+
+  async findAlbum(id: string) {
+    return this.data.albums.find((album) => album.id === id);
+  }
+
+  async findTrack(id: string) {
+    return this.data.tracks.find((track) => track.id === id);
+  }
+
+  async findArtist(id: string) {
+    return this.data.artists.find((artist) => artist.id === id);
   }
 }
