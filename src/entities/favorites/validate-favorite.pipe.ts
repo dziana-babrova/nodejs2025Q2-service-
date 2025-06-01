@@ -7,12 +7,12 @@ import {
 } from '@nestjs/common';
 import { ERRORS } from 'src/consts/ERRORS';
 import { isUUID } from 'class-validator';
-import { TrackService } from 'src/track/track.service';
-import { ArtistService } from 'src/artist/artist.service';
-import { AlbumService } from 'src/album/album.service';
-import { Track } from 'src/track/track.interface';
-import { Artist } from 'src/artist/artist.interface';
-import { Album } from 'src/album/album.interface';
+import { TrackService } from 'src/entities/track/track.service';
+import { ArtistService } from 'src/entities/artist/artist.service';
+import { AlbumService } from 'src/entities/album/album.service';
+import { Track } from 'src/entities/track/track.interface';
+import { Artist } from 'src/entities/artist/artist.interface';
+import { Album } from 'src/entities/album/album.interface';
 import { FavoritesService } from './favorites.service';
 
 @Injectable()

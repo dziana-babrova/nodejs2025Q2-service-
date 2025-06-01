@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Param, Delete, HttpCode } from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
 import { MESSAGES } from 'src/consts/MESSAGES';
-import { Track } from 'src/track/track.interface';
-import { Album } from 'src/album/album.interface';
-import { Artist } from 'src/artist/artist.interface';
+import { Track } from 'src/entities/track/track.interface';
+import { Album } from 'src/entities/album/album.interface';
+import { Artist } from 'src/entities/artist/artist.interface';
 import {
   ValidateDeletionFavoriteAlbumPipe,
   ValidateDeletionFavoriteArtistPipe,

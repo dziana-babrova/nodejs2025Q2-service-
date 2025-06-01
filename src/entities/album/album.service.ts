@@ -2,8 +2,8 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { Album } from './album.interface';
 import { v4 as uuidv4 } from 'uuid';
 import { createAlbumDto, updateAlbumDto } from './album.dto';
-import { TrackService } from 'src/track/track.service';
-import { FavoritesService } from 'src/favorites/favorites.service';
+import { TrackService } from 'src/entities/track/track.service';
+import { FavoritesService } from 'src/entities/favorites/favorites.service';
 
 @Injectable()
 export class AlbumService {

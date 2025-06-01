@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Track } from './track.interface';
 import { createTrackDto, updateTrackDto } from './track.dto';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { FavoritesService } from 'src/favorites/favorites.service';
+import { FavoritesService } from 'src/entities/favorites/favorites.service';
 
 @Injectable()
 export class TrackService {
