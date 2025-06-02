@@ -10,7 +10,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const port = configService.get('PORT');
   const openApiDocument = YAML.load('./doc/api.yaml');
-  SwaggerModule.setup('api', app, openApiDocument);
+  SwaggerModule.setup('doc', app, openApiDocument);
 
   app.useGlobalPipes(
     new ValidationPipe({
