@@ -15,6 +15,10 @@ npm install
 
 Create .env file based on .env.example file.
 
+## Creating .ENV file
+
+Create .env file based on .env.example file.
+
 ## Running application
 
 ```
