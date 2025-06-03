@@ -11,6 +11,10 @@ git clone {repository URL}
 ```
 npm install
 ```
+or if you have some errors while installing NPM modules (due to deprecated versions of dependencies)
+```
+npm i --force
+```
 ## Creating .ENV file
 
 Create .env file based on .env.example file.
