@@ -1,37 +1,33 @@
 # === Stage 1: Build ===
-FROM node:18-alpine AS builder
-
-# Set working directory inside the container
+FROM node:20-alpine AS base
 WORKDIR /usr/src/app
-
-# Install app dependencies
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm install --only=production
+ENV NODE_ENV=production
 
-# Copy the application code
+# === Stage 2: Development ===
+FROM node:20-alpine AS development
+WORKDIR /usr/src/app
 COPY . .
+COPY ./doc /usr/src/app
+RUN npm install
+EXPOSE ${APP_PORT}
+CMD ["npx", "nodemon", "--watch", "src", "./src/main.ts"]
 
-# Build the NestJS application
+# === Stage 3: Build ===
+FROM node:20-alpine AS builder
+WORKDIR /usr/src/app
+COPY . .
+COPY ./doc ./doc
+RUN npm install
 RUN npm run build
 
-# === Stage 2: Run ===
-FROM node:18-alpine
-
-# Set working directory
+# === Stage 4: Production ===
+FROM node:20-alpine AS production
 WORKDIR /usr/src/app
-
-# Copy dependencies from the build stage
-COPY package.json package-lock.json ./
-RUN npm install --production
-
-# Copy the built application from Stage 1
+COPY --from=base /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/src/app/dist ./dist
-
-# Copy any necessary .env file into the container (for configuration on runtime)
-COPY .env ./
-
-# Expose port (use ENV for flexibility)
+COPY ./.env ./
+COPY ./doc ./
 EXPOSE ${APP_PORT}
-
-# Start the application
 CMD ["node", "dist/main"]

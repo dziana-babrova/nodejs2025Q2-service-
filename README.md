@@ -16,6 +16,37 @@ npm install
 
 Create .env file based on .env.example file.
 
+## Docker
+
+To check that user-defined bridge is configured, use the following command:
+
+```
+npm run check:bridge
+
+```
+
+There you can find 2 containers (home_library, hl-postgres-db) attached to the 'nodejs2025q2-service-\_hl_network'network.
+
+![Containers](images/containers.png)
+
+To check that the app restarts upon changes in src, run docker with --watch flag:
+
+```
+docker-compose up --watch
+
+```
+
+Make any changes in src folder, set focus into the terminal, wait for 'home_library has been recreated' message to appear.
+
+To check that the final size of the Docker image with application is less 500mb, run the following command:
+
+```
+docker images
+
+```
+
+There you can see 'nodejs2025q2-service--app' repository which you should check.
+
 ## Running application
 
 ```

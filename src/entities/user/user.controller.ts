@@ -31,7 +31,7 @@ export class UserController {
     const response = users.map((user) => {
       return new UserEntity(user);
     });
-    return response;
+    return [...response, 'some text'];
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
