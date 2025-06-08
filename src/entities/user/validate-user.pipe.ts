@@ -9,22 +9,17 @@ import { UserService } from './user.service';
 import { ERRORS } from 'src/consts/ERRORS';
 import { UpdatePasswordDto } from './user.dto';
 import { isUUID } from 'class-validator';
-import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ValidateUserUpdatePipe implements PipeTransform {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly usersService: UserService) {}
 
   async transform(data: UpdatePasswordDto & { id: string }) {
     if (!isUUID(data.id)) {
       throw new BadRequestException(ERRORS.NOT_UUID());
     }
 
-    const user = await this.prisma.user.findUnique({
-      where: {
-        id: data.id,
-      },
-    });
+    const user = await this.usersService.get(data.id);
 
     if (!user) {
       throw new NotFoundException(ERRORS.NOT_FOUND('User'));

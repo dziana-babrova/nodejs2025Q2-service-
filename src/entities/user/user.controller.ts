@@ -52,7 +52,7 @@ export class UserController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Put(':id')
   @UsePipes(ValidateUserUpdatePipe, ValidationPipe)
-  async update(@Body() updateDto: User) {
+  async update(@Body() updateDto: UpdatePasswordDto) {
     const updatedUser = await this.service.update(updateDto);
     return new UserEntity(updatedUser);
   }
