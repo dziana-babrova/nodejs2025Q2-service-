@@ -31,7 +31,7 @@ export class UserService {
 
   async update({ id, ...dto }: UpdatePasswordDto) {
     const oldItem = this.data.get(id);
-    const newTime = new Date().getTime();
+    const newTime = new Date().getDate();
     const newVersion = ++oldItem.version;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const updatedItem = {
