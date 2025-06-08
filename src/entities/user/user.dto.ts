@@ -5,8 +5,8 @@ export class UserEntity {
   id: string; // uuid v4
   login: string;
   version: number; // integer number, increments on update
-  createdAt: number; // timestamp of creation
-  updatedAt: number; // timestamp of last update
+  createdAt: Date; // timestamp of creation
+  updatedAt: Date; // timestamp of last update
 
   @Exclude()
   password: string;

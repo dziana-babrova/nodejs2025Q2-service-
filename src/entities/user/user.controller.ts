@@ -18,7 +18,8 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto, UpdatePasswordDto, UserEntity } from './user.dto';
 import { ERRORS } from 'src/consts/ERRORS';
-import { ValidateUserPipe } from './validate-user.pipe';
+import { ValidateUserPipe, ValidateUserUpdatePipe } from './validate-user.pipe';
+import { User } from './user.interface';
 
 @Controller('user')
 export class UserController {
@@ -31,16 +32,13 @@ export class UserController {
     const response = users.map((user) => {
       return new UserEntity(user);
     });
-    return [...response, 'some text'];
+    return [...response];
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
-  async findOne(@Param('id', ParseUUIDPipe) id: string) {
+  async findOne(@Param('id', ValidateUserPipe) id: string) {
     const user = await this.service.get(id);
-    if (!user) {
-      throw new HttpException(ERRORS.NOT_FOUND('User'), HttpStatus.NOT_FOUND);
-    }
     return new UserEntity(user);
   }
 
@@ -53,18 +51,15 @@ export class UserController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Put(':id')
-  @UsePipes(ValidateUserPipe, ValidationPipe)
-  async update(@Body() updateDto: UpdatePasswordDto) {
+  @UsePipes(ValidateUserUpdatePipe, ValidationPipe)
+  async update(@Body() updateDto: User) {
     const updatedUser = await this.service.update(updateDto);
     return new UserEntity(updatedUser);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  async remove(@Param('id', ParseUUIDPipe) id: string) {
-    const deletedUser = await this.service.delete(id);
-    if (!deletedUser) {
-      throw new HttpException(ERRORS.NOT_FOUND('User'), HttpStatus.NOT_FOUND);
-    }
+  async remove(@Param('id', ValidateUserPipe) id: string) {
+    await this.service.delete(id);
   }
 }
