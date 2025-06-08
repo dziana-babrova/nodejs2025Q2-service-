@@ -9,22 +9,50 @@ import { UserService } from './user.service';
 import { ERRORS } from 'src/consts/ERRORS';
 import { UpdatePasswordDto } from './user.dto';
 import { isUUID } from 'class-validator';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
-export class ValidateUserPipe implements PipeTransform {
-  constructor(private readonly usersService: UserService) {}
+export class ValidateUserUpdatePipe implements PipeTransform {
+  constructor(private readonly prisma: PrismaService) {}
 
   async transform(data: UpdatePasswordDto & { id: string }) {
-    const user = await this.usersService.get(data.id);
+    if (!isUUID(data.id)) {
+      throw new BadRequestException(ERRORS.NOT_UUID());
+    }
+
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: data.id,
+      },
+    });
+
     if (!user) {
       throw new NotFoundException(ERRORS.NOT_FOUND('User'));
     }
     if (data.oldPassword !== user.password) {
       throw new ForbiddenException(ERRORS.INCORRECT_PASSWORD());
     }
-    if (!isUUID(data.id)) {
+    return {
+      ...user,
+      version: ++user.version,
+      updatedAt: new Date(),
+      password: data.newPassword,
+    };
+  }
+}
+
+@Injectable()
+export class ValidateUserPipe implements PipeTransform {
+  constructor(private readonly usersService: UserService) {}
+
+  async transform(id: string) {
+    const user = await this.usersService.get(id);
+    if (!isUUID(id)) {
       throw new BadRequestException(ERRORS.NOT_UUID());
     }
-    return { ...data };
+    if (!user) {
+      throw new NotFoundException(ERRORS.NOT_FOUND('User'));
+    }
+    return id;
   }
 }
