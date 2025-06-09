@@ -20,9 +20,10 @@ CREATE TABLE "Artist" (
 -- CreateTable
 CREATE TABLE "Favorite" (
     "id" UUID NOT NULL,
-    "userId" UUID NOT NULL,
     "type" TEXT NOT NULL,
-    "referenceId" UUID NOT NULL,
+    "artistId" UUID,
+    "albumId" UUID,
+    "trackId" UUID,
 
     CONSTRAINT "Favorite_pkey" PRIMARY KEY ("id")
 );
@@ -50,17 +51,26 @@ CREATE TABLE "User" (
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateIndex
+CREATE UNIQUE INDEX "Favorite_artistId_key" ON "Favorite"("artistId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Favorite_albumId_key" ON "Favorite"("albumId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Favorite_trackId_key" ON "Favorite"("trackId");
+
 -- AddForeignKey
 ALTER TABLE "Album" ADD CONSTRAINT "Album_artistId_fkey" FOREIGN KEY ("artistId") REFERENCES "Artist"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Favorite" ADD CONSTRAINT "Favorite_referenceId_fkey" FOREIGN KEY ("referenceId") REFERENCES "Artist"("id") ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE "Favorite" ADD CONSTRAINT "Favorite_artistId_fkey" FOREIGN KEY ("artistId") REFERENCES "Artist"("id") ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "Favorite" ADD CONSTRAINT "Favorite_referenceid_fkey1" FOREIGN KEY ("referenceId") REFERENCES "Album"("id") ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE "Favorite" ADD CONSTRAINT "Favorite_albumId_fkey" FOREIGN KEY ("albumId") REFERENCES "Album"("id") ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "Favorite" ADD CONSTRAINT "Favorite_referenceid_fkey2" FOREIGN KEY ("referenceId") REFERENCES "Track"("id") ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE "Favorite" ADD CONSTRAINT "Favorite_trackId_fkey" FOREIGN KEY ("trackId") REFERENCES "Track"("id") ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "Track" ADD CONSTRAINT "Track_albumId_fkey" FOREIGN KEY ("albumId") REFERENCES "Album"("id") ON DELETE SET NULL ON UPDATE CASCADE;
