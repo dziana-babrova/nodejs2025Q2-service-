@@ -2,3 +2,57 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Album {
+  id       String     @id @default(uuid()) @db.Uuid
+  name     String
+  year     Int
+  artistId String?    @db.Uuid
+  Artist   Artist?    @relation(fields: [artistId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  Favorite Favorite[]
+  Track    Track[]
+}
+
+model Artist {
+  id       String     @id @default(uuid()) @db.Uuid
+  name     String
+  grammy   Boolean
+  Album    Album[]
+  Favorite Favorite[]
+  Track    Track[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model Favorite {
+  id          String @id @default(uuid()) @db.Uuid
+  userId      String @db.Uuid
+  type        String
+  referenceId String @db.Uuid
+  Artist      Artist @relation(fields: [referenceId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  Album       Album  @relation(fields: [referenceId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "Favorite_referenceid_fkey1")
+  Track       Track  @relation(fields: [referenceId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "Favorite_referenceid_fkey2")
+}
+
+model Track {
+  id       String     @id @default(uuid()) @db.Uuid
+  name     String
+  duration Int
+  artistId String?    @db.Uuid
+  albumId  String?    @db.Uuid
+  Favorite Favorite[]
+  Album    Album?     @relation(fields: [albumId], references: [id], onUpdate: NoAction)
+  Artist   Artist?    @relation(fields: [artistId], references: [id], onUpdate: NoAction)
+}
+
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  login     String
+  password  String
+  version   Int @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}

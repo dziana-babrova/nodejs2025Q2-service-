@@ -1,52 +1,44 @@
 import { Injectable } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
-import { CreateUserDto, UpdatePasswordDto } from './user.dto';
+import { CreateUserDto, UpdatePasswordDto, UserEntity } from './user.dto';
 import { User } from './user.interface';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class UserService {
   private readonly data: Map<string, User> = new Map();
+  constructor(private readonly prisma: PrismaService) {}
 
-  async create(createDto: CreateUserDto) {
-    const id = uuidv4();
-    const time = new Date().getTime();
-    const item = {
-      id,
-      createdAt: time,
-      updatedAt: time,
-      version: 1,
-      ...createDto,
-    };
-    this.data.set(item.id, item);
-    return this.data.get(id);
+  async create(data: CreateUserDto) {
+    const user = await this.prisma.user.create({
+      data,
+    });
+    return plainToClass(UserEntity, user);
   }
 
   async getAll(): Promise<User[]> {
-    return [...this.data.values()];
+    const users = await this.prisma.user.findMany();
+    return users.map((user) => plainToClass(UserEntity, user));
   }
 
   async get(id: string): Promise<User | null> {
-    return this.data.get(id);
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+    return plainToClass(UserEntity, user);
   }
 
   async update({ id, ...dto }: UpdatePasswordDto) {
-    const oldItem = this.data.get(id);
-    const newTime = new Date().getDate();
-    const newVersion = ++oldItem.version;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const updatedItem = {
-      ...oldItem,
-      password: dto.newPassword,
-      version: newVersion,
-      updatedAt: newTime,
-    };
-    this.data.set(id, updatedItem);
-    return this.get(id);
+    const user = await this.prisma.user.update({
+      where: { id },
+      data: { id, ...dto },
+    });
+    return plainToClass(UserEntity, user);
   }
 
   async delete(id: string) {
-    const doesUserExist = this.get(id);
-    this.data.delete(id);
-    return doesUserExist;
+    await this.prisma.user.delete({
+      where: { id },
+    });
   }
 }

@@ -11,9 +11,9 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const port = configService.get('PORT');
 
-  const pathToDoc = path.join(__dirname, './../doc/api.yaml');
-  const openApiDocument = YAML.load(pathToDoc);
-  SwaggerModule.setup('doc', app, openApiDocument);
+  // const pathToDoc = path.join(__dirname, './../doc/api.yaml');
+  // const openApiDocument = YAML.load(pathToDoc);
+  // SwaggerModule.setup('doc', app, openApiDocument);
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

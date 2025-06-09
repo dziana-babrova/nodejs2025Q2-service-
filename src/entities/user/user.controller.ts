@@ -28,33 +28,26 @@ export class UserController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   async findAll() {
-    const users = await this.service.getAll();
-    const response = users.map((user) => {
-      return new UserEntity(user);
-    });
-    return [...response];
+    return this.service.getAll();
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
   async findOne(@Param('id', ValidateUserPipe) id: string) {
-    const user = await this.service.get(id);
-    return new UserEntity(user);
+    return this.service.get(id);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
   async create(@Body() createDto: CreateUserDto) {
-    const user = await this.service.create(createDto);
-    return new UserEntity(user);
+    return this.service.create(createDto);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Put(':id')
-  @UsePipes(ValidateUserUpdatePipe, ValidationPipe)
+  @UsePipes(ValidateUserUpdatePipe)
   async update(@Body() updateDto: UpdatePasswordDto) {
-    const updatedUser = await this.service.update(updateDto);
-    return new UserEntity(updatedUser);
+    return this.service.update(updateDto);
   }
 
   @Delete(':id')

@@ -5,6 +5,7 @@ import { TrackModule } from './entities/track/track.module';
 import { UserModule } from './entities/user/user.module';
 import { FavoritesModule } from './entities/favorites/favorites.module';
 import { ConfigModule } from '@nestjs/config';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    PrismaModule,
   ],
 })
 export class AppModule {}
