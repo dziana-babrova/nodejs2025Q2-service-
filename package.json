@@ -23,7 +23,10 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "check:bridge": "docker network inspect nodejs2025q2-service-_hl_network"
+    "docker:up": "docker-compose up --build",
+    "docker:down": "docker-compose down",
+    "docker:scan": "docker scout cves",
+    "prisma:migrate": "prisma migrate dev --name init"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.0",
