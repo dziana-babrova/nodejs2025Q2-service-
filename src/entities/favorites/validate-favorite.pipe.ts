@@ -7,9 +7,7 @@ import {
 } from '@nestjs/common';
 import { ERRORS } from 'src/consts/ERRORS';
 import { isUUID } from 'class-validator';
-import { FavoritesService } from './favorites.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Album, Artist, Track } from '@prisma/client';
 
 @Injectable()
 export class ValidateFavoriteArtistPipe implements PipeTransform {
