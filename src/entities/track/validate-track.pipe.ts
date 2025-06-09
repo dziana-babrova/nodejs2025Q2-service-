@@ -6,18 +6,22 @@ import {
 } from '@nestjs/common';
 import { ERRORS } from 'src/consts/ERRORS';
 import { isUUID } from 'class-validator';
-import { TrackService } from './track.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ValidateTrackPipe implements PipeTransform {
-  constructor(private readonly service: TrackService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async transform(id: string): Promise<string> {
-    const existingTrack = await this.service.get(id);
-
     if (!isUUID(id)) {
       throw new BadRequestException(ERRORS.NOT_UUID());
     }
+
+    const existingTrack = await this.prisma.track.findUnique({
+      where: {
+        id,
+      },
+    });
 
     if (!existingTrack) {
       throw new NotFoundException(ERRORS.NOT_FOUND('Track'));
