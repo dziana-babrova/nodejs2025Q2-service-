@@ -5,6 +5,7 @@ import { createArtistDto, updateArtistDto } from './artist.dto';
 import { TrackService } from 'src/entities/track/track.service';
 import { AlbumService } from 'src/entities/album/album.service';
 import { FavoritesService } from 'src/entities/favorites/favorites.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ArtistService {
@@ -17,37 +18,31 @@ export class ArtistService {
     private readonly albumService: AlbumService,
     @Inject(forwardRef(() => FavoritesService))
     private readonly favoritesService: FavoritesService,
+    private readonly prisma: PrismaService,
   ) {}
 
-  async create(dto: createArtistDto) {
-    const id = uuidv4();
-    const item: Artist = {
-      id,
-      ...dto,
-    };
-    this.data.set(item.id, item);
-    return this.get(id);
+  async create(data: createArtistDto) {
+    return this.prisma.artist.create({
+      data,
+    });
   }
 
   async getAll(): Promise<Artist[]> {
-    return [...this.data.values()];
+    return this.prisma.artist.findMany();
   }
 
   async get(id: string): Promise<Artist | null> {
-    return this.data.get(id);
+    return this.prisma.artist.findUnique({
+      where: { id },
+    });
   }
 
-  async update(id: string, updateDto: updateArtistDto): Promise<Artist | null> {
-    const updatedItem = {
-      id,
-      ...updateDto,
-    };
-    this.data.set(id, updatedItem);
-    return this.get(id);
+  async update(id: string, data: updateArtistDto): Promise<Artist | null> {
+    return this.prisma.artist.update({ where: { id }, data });
   }
 
   async delete(id: string) {
-    this.data.delete(id);
+    await this.prisma.artist.delete({ where: { id } });
     this.trackService.updateArtistToNull(id);
     this.albumService.updateArtistToNull(id);
     this.favoritesService.deleteArtist(id);
