@@ -42,9 +42,11 @@ export class ArtistService {
   }
 
   async delete(id: string) {
-    await this.prisma.artist.delete({ where: { id } });
-    this.trackService.updateArtistToNull(id);
-    this.albumService.updateArtistToNull(id);
-    this.favoritesService.deleteArtist(id);
+    await this.prisma.artist.delete({
+      where: { id },
+    });
+    // this.trackService.updateArtistToNull(id);
+    // this.albumService.updateArtistToNull(id);
+    // this.favoritesService.deleteArtist(id);
   }
 }
