@@ -5,7 +5,6 @@ import {
   ForbiddenException,
   BadRequestException,
 } from '@nestjs/common';
-import { UserService } from './user.service';
 import { ERRORS } from 'src/consts/ERRORS';
 import { UpdatePasswordDto } from './user.dto';
 import { isUUID } from 'class-validator';

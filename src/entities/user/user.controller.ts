@@ -6,20 +6,14 @@ import {
   Put,
   Param,
   Delete,
-  ParseUUIDPipe,
   HttpCode,
-  HttpException,
-  HttpStatus,
   UsePipes,
-  ValidationPipe,
   UseInterceptors,
   ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto, UpdatePasswordDto, UserEntity } from './user.dto';
-import { ERRORS } from 'src/consts/ERRORS';
+import { CreateUserDto, UpdatePasswordDto } from './user.dto';
 import { ValidateUserPipe, ValidateUserUpdatePipe } from './validate-user.pipe';
-import { User } from './user.interface';
 
 @Controller('user')
 export class UserController {

@@ -1,5 +1,4 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
 import { Artist } from './artist.interface';
 import { createArtistDto, updateArtistDto } from './artist.dto';
 import { TrackService } from 'src/entities/track/track.service';

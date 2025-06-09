@@ -18,34 +18,24 @@ Create .env file based on .env.example file.
 
 ## Docker
 
-To check that user-defined bridge is configured, use the following command:
+1. If you a Windows user, start Docker desktop.
+2. To build an app and database in Docker, run the following script:
 
 ```
-npm run check:bridge
-
+npm run docker:up
 ```
 
-There you can find 2 containers (home_library, hl-postgres-db) attached to the 'nodejs2025q2-service-\_hl_network'network.
-
-![Containers](images/containers.png)
-
-To check that the app restarts upon changes in src, run docker with --watch flag:
+3. After that, run the script to start migration
 
 ```
-docker-compose up --watch
-
+npm run prisma:migrate
 ```
 
-Make any changes in src folder, set focus into the terminal, wait for 'home_library has been recreated' message to appear.
-
-To check that the final size of the Docker image with application is less 500mb, run the following command:
+To scan the container for vulnerabilities
 
 ```
-docker images
-
+npm run docker:scan
 ```
-
-There you can see 'nodejs2025q2-service--app' repository which you should check.
 
 ## Running application
 
