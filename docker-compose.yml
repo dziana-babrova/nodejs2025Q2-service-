@@ -1,0 +1,51 @@
+services:
+  app:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    container_name: home_library
+    environment:
+      - PORT=${PORT}
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:${PGPORT}/${POSTGRES_DB}?schema=public
+    volumes:
+      - ./src:/usr/src/app/src
+      - ./doc:/usr/src/app/doc
+    restart: always
+    develop:
+      watch:
+        - action: rebuild
+          path: ./src
+          target: /usr/src/app/src
+          ignore:
+            - node_modules/
+    ports:
+      - '${PORT}:${PORT}'
+    networks:
+      - hl_network
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: hl-postgres-db
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - PGPORT=${PGPORT}
+    restart: always
+    ports:
+      - '${PGPORT}:${PGPORT}'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - postgres_logs:/var/log/postgresql
+    networks:
+      - hl_network
+
+volumes:
+  postgres_data:
+  postgres_logs:
+
+networks:
+  hl_network:
+    driver: bridge

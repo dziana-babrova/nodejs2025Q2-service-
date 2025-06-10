@@ -19,6 +19,31 @@ npm i --force
 
 Create .env file based on .env.example file.
 
+## Creating .ENV file
+
+Create .env file based on .env.example file.
+
+## Docker
+
+1. If you a Windows user, start Docker desktop.
+2. To build an app and database in Docker, run the following script:
+
+```
+npm run docker:up
+```
+
+3. After that, run the script to start migration
+
+```
+npm run prisma:migrate
+```
+
+To scan the container for vulnerabilities
+
+```
+npm run docker:scan
+```
+
 ## Running application
 
 ```
