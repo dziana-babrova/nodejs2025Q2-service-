@@ -6,6 +6,7 @@ import { UserModule } from './entities/user/user.module';
 import { FavoritesModule } from './entities/favorites/favorites.module';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { PrismaModule } from './prisma/prisma.module';
       isGlobal: true,
     }),
     PrismaModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
