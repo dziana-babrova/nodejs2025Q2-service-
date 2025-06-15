@@ -37,26 +37,4 @@ export class TrackService {
       where: { id },
     });
   }
-
-  // async updateArtistToNull(artistId: string) {
-  //   await this.prisma.track.updateMany({
-  //     where: {
-  //       artistId,
-  //     },
-  //     data: {
-  //       artistId: null,
-  //     },
-  //   });
-  // }
-
-  // async updateAlbumToNull(albumId: string) {
-  //   await this.prisma.track.updateMany({
-  //     where: {
-  //       albumId,
-  //     },
-  //     data: {
-  //       albumId: null,
-  //     },
-  //   });
-  // }
 }

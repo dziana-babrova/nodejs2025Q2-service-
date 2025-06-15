@@ -1,24 +1,11 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Artist } from './artist.interface';
 import { createArtistDto, updateArtistDto } from './artist.dto';
-import { TrackService } from 'src/entities/track/track.service';
-import { AlbumService } from 'src/entities/album/album.service';
-import { FavoritesService } from 'src/entities/favorites/favorites.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ArtistService {
-  private readonly data: Map<string, Artist> = new Map();
-
-  constructor(
-    @Inject(forwardRef(() => TrackService))
-    private readonly trackService: TrackService,
-    @Inject(forwardRef(() => AlbumService))
-    private readonly albumService: AlbumService,
-    @Inject(forwardRef(() => FavoritesService))
-    private readonly favoritesService: FavoritesService,
-    private readonly prisma: PrismaService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(data: createArtistDto) {
     return this.prisma.artist.create({
@@ -44,8 +31,5 @@ export class ArtistService {
     await this.prisma.artist.delete({
       where: { id },
     });
-    // this.trackService.updateArtistToNull(id);
-    // this.albumService.updateArtistToNull(id);
-    // this.favoritesService.deleteArtist(id);
   }
 }

@@ -4,4 +4,5 @@ export const ERRORS = {
   NOT_UUID: () => 'Id is not valid',
   UNPRROCESSABLE_ENTITY: (entity: string) => `${entity} does not exist`,
   INVALID_CREDENTIALS: () => 'Invalid credentials',
+  EXISTING_USER: () => 'User already exists',
 };

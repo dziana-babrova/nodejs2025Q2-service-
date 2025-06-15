@@ -8,9 +8,10 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { ValidateUserPipe, ValidateUserUpdatePipe } from './validate-user.pipe';
 import { CombineIdBodyMiddleware } from 'src/middleware/merge-param-body.middleware';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [],
+  imports: [ConfigModule],
   controllers: [UserController],
   providers: [UserService, ValidateUserUpdatePipe, ValidateUserPipe],
   exports: [UserService],

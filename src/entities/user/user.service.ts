@@ -8,7 +8,6 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
-  private readonly data: Map<string, User> = new Map();
   constructor(
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
@@ -42,11 +41,13 @@ export class UserService {
   }
 
   async getByLogin(login: string) {
-    return this.prisma.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: {
         login,
       },
     });
+
+    return user;
   }
 
   async update({ id, ...dto }: UpdatePasswordDto) {

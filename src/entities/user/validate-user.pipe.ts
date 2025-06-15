@@ -9,10 +9,15 @@ import { ERRORS } from 'src/consts/ERRORS';
 import { UpdatePasswordDto } from './user.dto';
 import { isUUID } from 'class-validator';
 import { PrismaService } from 'src/prisma/prisma.service';
+import * as bcrypt from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ValidateUserUpdatePipe implements PipeTransform {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly configService: ConfigService,
+  ) {}
 
   async transform(data: UpdatePasswordDto & { id: string }) {
     if (!isUUID(data.id)) {
@@ -24,14 +29,18 @@ export class ValidateUserUpdatePipe implements PipeTransform {
     if (!user) {
       throw new NotFoundException(ERRORS.NOT_FOUND('User'));
     }
-    if (data.oldPassword !== user.password) {
+
+    if (!(await bcrypt.compare(data.oldPassword, user.password))) {
       throw new ForbiddenException(ERRORS.INCORRECT_PASSWORD());
     }
     return {
       ...user,
       version: ++user.version,
       updatedAt: new Date(),
-      password: data.newPassword,
+      password: await bcrypt.hash(
+        data.newPassword,
+        parseInt(this.configService.get<string>('CRYPT_SALT'), 10),
+      ),
     };
   }
 }

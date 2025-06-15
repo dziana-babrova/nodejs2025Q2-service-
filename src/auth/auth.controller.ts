@@ -1,31 +1,24 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Get,
-  Headers,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Controller, Post, Body, HttpCode } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { authDto } from './auth.dto';
+import { AuthDto } from './dto/auth.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  async login(@Body() data: authDto) {
+  async login(@Body() data: AuthDto) {
     const { login, password } = data;
-    console.log(login, password);
-    return this.authService.login(login, password);
+    const result = await this.authService.login(login, password);
+    return result;
   }
 
-  @Get('verify')
-  async verify(@Headers('Authorization') authHeader: string) {
-    const token = authHeader?.split(' ')[1];
-    if (!token) {
-      throw new UnauthorizedException('Missing token');
-    }
-    return this.authService.verifyToken(token);
+  @Post('signup')
+  @HttpCode(201)
+  async signup(@Body() data: AuthDto) {
+    const { login, password } = data;
+    const user = await this.authService.signup(login, password);
+
+    return user;
   }
 }

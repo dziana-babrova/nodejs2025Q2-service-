@@ -24,17 +24,23 @@ export class AuthService {
   }
 
   async login(login: string, password: string) {
-    const userVAlidated = await this.validateUser(login, password);
+    const userValidated = await this.validateUser(login, password);
 
-    if (!userVAlidated) {
+    if (!userValidated) {
       throw new UnauthorizedException(ERRORS.INVALID_CREDENTIALS());
     }
 
-    const payload = { username: userVAlidated.login, sub: userVAlidated.id };
-
+    const payload = { login: userValidated.login, userId: userValidated.id };
     return {
       accessToken: await this.jwtService.signAsync(payload),
     };
+  }
+
+  async signup(login: string, password: string) {
+    const existingUser = await this.userService.getByLogin(login);
+    if (existingUser) return existingUser;
+
+    return this.userService.create({ login, password });
   }
 
   async verifyToken(token: string) {
