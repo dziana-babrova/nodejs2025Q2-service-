@@ -5,4 +5,5 @@ export const ERRORS = {
   UNPRROCESSABLE_ENTITY: (entity: string) => `${entity} does not exist`,
   INVALID_CREDENTIALS: () => 'Invalid credentials',
   EXISTING_USER: () => 'User already exists',
+  INVALID_REFRESH_TOKEN: () => 'Invalid or expired refresh token',
 };

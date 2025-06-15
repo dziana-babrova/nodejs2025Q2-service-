@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/entities/user/user.service';
 import * as bcrypt from 'bcrypt';
@@ -27,13 +27,10 @@ export class AuthService {
     const userValidated = await this.validateUser(login, password);
 
     if (!userValidated) {
-      throw new UnauthorizedException(ERRORS.INVALID_CREDENTIALS());
+      throw new ForbiddenException(ERRORS.INVALID_CREDENTIALS());
     }
 
-    const payload = { login: userValidated.login, userId: userValidated.id };
-    return {
-      accessToken: await this.jwtService.signAsync(payload),
-    };
+    return this.generateTokens(userValidated.id, userValidated.login);
   }
 
   async signup(login: string, password: string) {
@@ -43,11 +40,38 @@ export class AuthService {
     return this.userService.create({ login, password });
   }
 
+  async refresh(refreshToken: string) {
+    try {
+      const payload = this.jwtService.verify(refreshToken, {
+        secret: this.configService.get<string>('JWT_SECRET_REFRESH_KEY'),
+      });
+      return this.generateTokens(payload.userId, payload.login);
+    } catch {
+      throw new ForbiddenException(ERRORS.INVALID_REFRESH_TOKEN());
+    }
+  }
+
   async verifyToken(token: string) {
     try {
       return this.jwtService.verify(token);
     } catch {
       throw new Error('Invalid token');
     }
+  }
+
+  async generateTokens(userId: string, login: string) {
+    const payload = { userId, login };
+
+    const accessToken = this.jwtService.sign(payload, {
+      secret: this.configService.get<string>('JWT_SECRET_KEY'),
+      expiresIn: this.configService.get<string>('TOKEN_EXPIRE_TIME'),
+    });
+
+    const refreshToken = this.jwtService.sign(payload, {
+      secret: this.configService.get<string>('JWT_SECRET_REFRESH_KEY'),
+      expiresIn: this.configService.get<string>('TOKEN_REFRESH_EXPIRE_TIME'),
+    });
+
+    return { accessToken, refreshToken };
   }
 }
